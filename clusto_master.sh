@@ -34,6 +34,12 @@ grep -f selective_geneids.txt Penicillium_sp._X.gff3 > Penicillium_sp._X_above_f
 
 grep "mRNA" Penicillium_sp._X_above_four.gff3.txt > Penicillium_sp._X_above_four_onlymrna.gff3.txt
 
+## This step will make sure that the files contain all of the functional annotation, before hand it would cut off between hypothetical and protein as there was a space!
+## If the text is too unwieldy on the page, simply delete this line of code, it won't have an effect on the rest of the script. 
+
+ awk '{print $1, $2, $3, $4, $5, $6, $7, $8, $9$10$11$12$13$14$15$16$17$18$19$20 }' Penicillium_sp._X_above_four_onlymrna.gff3.txt > Penicillium_sp._X_above_four_onlymrnacomb.gff3.txt
+
+
 ## Then we need to separate them into contigs. 
 
 mkdir passed_to_awk
@@ -44,7 +50,7 @@ for i in {1..8};
 
 do
 
-    grep 'tig0000000'$i Penicillium_sp._X_above_four_onlymrna.gff3.txt > passed_to_awk/Penicillium_sp._X_above_four_tig$i
+    grep 'tig0000000'$i Penicillium_sp._X_above_four_onlymrnacomb.gff3.txt > passed_to_awk/Penicillium_sp._X_above_four_tig$i
 
 done
 
