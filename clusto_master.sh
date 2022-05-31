@@ -54,7 +54,7 @@ do
 
 done
 
-## Step X. Modify gff3 to remove unneeded data and calculate mid-point of gene. 
+## Step X. Modify gff3 to remove un-needed data and calculate mid-point of gene. 
 
 for FILE in passed_to_awk/*;
 
@@ -70,4 +70,24 @@ cd passed_to_awk
 
 ## Then use this to run the window code and output to a new file 
 
-python3 ~/inspector_clusto/testing/scripts/clusto_window_looping.py > ../clusters.txt
+python3 ~/inspector_clusto/testing/scripts/clusto_window_looping.py > ../mega_clusters.txt
+
+## Now we need to separate the cluster mega into contig-clusters. 
+## Make a new directory for the new files
+
+mkdir separated_clusters
+
+for i in {1..8}
+do
+    grep 'tig'$i mega_clusters.txt > separated_clusters/'clustersontig'$i
+done
+
+## We can then move into the new directory
+
+cd separated_clusters
+
+## I then add '.txt' to the end of each file as I had to remove it before. 
+
+find . -type f -exec bash -c 'mv "$0" "$0.txt"' {} \;
+
+
