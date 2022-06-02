@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/bin/bash
 
 mkdir above_4
 
@@ -91,3 +91,13 @@ cd separated_clusters
 ## I then add '.txt' to the end of each file as I had to remove it before. 
 
 find . -type f -exec bash -c 'mv "$0" "$0.txt"' {} \;
+
+python3 ~/inspector_clusto/inspector_package/scripts/clusto_grab.py > jim.txt
+
+
+## Then create a list of files to use for grepping the next file. 
+
+for i in {0..10000000..30000};
+do
+    echo $i >> cluster_starts.txt
+done
