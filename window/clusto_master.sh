@@ -1,24 +1,29 @@
 ##!/bin/bash
+echo "beginning the run, good luck"
 
-mkdir above_4
+mkdir above_4_below_negative_4
 
-cp input_data/inplantavsinvitro.csv above_4
+cp input_data/inplantavsinvitro.csv above_4_below_negative_4
 
-cp input_data/Penicillium_sp._X.gff3 above_4
+cp input_data/Penicillium_sp._X.gff3 above_4_below_negative_4
 
-cd above_4
+cp input_data/penx_master_table_inplantavsinvitro.csv above_4_below_negative_4
+
+cd above_4_below_negative_4
 
 ## Convert our csv file to a tab-delimited one
 
 sed 's/\,/\t/g' inplantavsinvitro.csv > inplantavsinvitro.txt
 
-## Write an if loop that if the LFC (column 2) is above a specified value, then pull the ID (column 1) to a new txt file for grepping against gff3 file 
+sed 's/\,/\t/g' penx_master_table_inplantavsinvitro.csv > penx_master_table_inplantavsinvitro.txt
+
+## Write an if loop that if the LFC (column 2) is above a specified value, then pull the ID (column 1) to a new txt file for grepping against gff3 file
 
 while read LINE; do
 
 awk '{ minimumLFC=4 ;
 
-if ($2 >= minimumLFC)
+if ($2 >= 4 || $2 <= -4)
 
     print $1 > "selective_geneids.txt"
 
@@ -28,29 +33,30 @@ done<inplantavsinvitro.txt
 
 ## Use this new selective gene id file to modify a gff3 to only contain genes regulated above or below the specified spot
 
-grep -f selective_geneids.txt Penicillium_sp._X.gff3 > Penicillium_sp._X_above_four.gff3.txt
+grep -f selective_geneids.txt Penicillium_sp._X.gff3 > Penicillium_sp._X_above_four_below_negative_four.gff3.txt
 
-## Then grep it down to only mRNA 
+## Then grep it down to only mRNA
 
-grep "mRNA" Penicillium_sp._X_above_four.gff3.txt > Penicillium_sp._X_above_four_onlymrna.gff3.txt
+grep "mRNA" Penicillium_sp._X_above_four_below_negative_four.gff3.txt > Penicillium_sp._X_above_four_below_negative_fouronlymrna.gff3.txt
 
 ## This step will make sure that the files contain all of the functional annotation, before hand it would cut off between hypothetical and protein as there was a space!
 ## If the text is too unwieldy on the page, simply delete this line of code, it won't have an effect on the rest of the script
 
- awk '{print $1, $2, $3, $4, $5, $6, $7, $8, $9$10$11$12$13$14$15$16$17$18$19$20 }' Penicillium_sp._X_above_four_onlymrna.gff3.txt > Penicillium_sp._X_above_four_onlymrnacomb.gff3.txt
+ awk '{print $1, $2, $3, $4, $5, $6, $7, $8, $9$10$11$12$13$14$15$16$17$18$19$20 }' Penicillium_sp._X_above_four_below_negative_fouronlymrna.gff3.txt > Penicillium_sp._X_above_four_below_negative_fouronlymrnacomb.gff3.txt
 
 
 ## Then we need to separate them into contigs
 
 mkdir passed_to_awk
 
-## for loop to do the separating, BUG; works but cant get the $i in output file name to be in middle of the file name where I want it to be. 
+## for loop to do the separating, BUG; works but cant get the $i in output file name to be in middle of the file name where I want it to be.
+echo "separating out tigs and cutting out the useless stuff"
 
-for i in {1..8};
+for i in {1..7};
 
 do
 
-    grep 'tig0000000'$i Penicillium_sp._X_above_four_onlymrnacomb.gff3.txt > passed_to_awk/Penicillium_sp._X_above_four_tig$i
+    grep 'tig0000000'$i Penicillium_sp._X_above_four_below_negative_fouronlymrnacomb.gff3.txt > passed_to_awk/Penicillium_sp._X_above_four_below_negative_fourtig$i
 
 done
 
@@ -62,14 +68,14 @@ do
 
     awk -i inplace '{print $9, ($4+$5)/2}' $FILE
 
-done 
+done
 
-## The final selected-gene-location files will be in the passed_to_awk directory for use 
+## The final selected-gene-location files will be in the passed_to_awk directory for use
 
 cd passed_to_awk
 
-## Then use this to run the window code and output to a new file 
-
+## Then use this to run the window code and output to a new file
+echo "sliding the window"
 python3 ~/inspector_clusto/inspector_package/scripts/clusto_window_looping.py > ../mega_clusters.txt
 
 cd ..
@@ -92,7 +98,72 @@ cd separated_clusters
 
 find . -type f -exec bash -c 'mv "$0" "$0.txt"' {} \;
 
-## Then call the fucking done with it script, which will grep the windows that contain genes and print 
-## the number of genes present within them, then they can be moved to excel
+#3
+## This first loop is annotated to explain their purposes
+echo "window done, now for some processing of the window output"
+for c in {1..8}
+do
+    mkdir $c
+    mkdir tidied$c
+    mv clustersontig$c.txt $c
+    cd $c
 
-bash ~/inspector_clusto/inspector_package/scripts/clusto_ifdwt.sh
+    for i in {0..10000000..30000} ## Make files for each possible window
+    do
+        grep ' '$i' ' clustersontig* > $i ## Pull out genes to individual files that exist within those windows
+    done
+
+    for FILE in *; do         awk -i inplace '{print $2}' $FILE; done
+    for FILE in *; do         sed -i 's/\;/\t/g' $FILE; done
+    for FILE in *; do         awk -i inplace '{print $1}' $FILE; done
+    for FILE in *; do         sed -i 's/.*=//' $FILE; done
+
+    for FILE in *
+    do
+        grep -f $FILE ~/inspector_clusto/inspector_package/above_4_below_negative_4/penx_master_table_inplantavsinvitro.txt > ../tidied$c/$FILE.txt
+    done
+
+    cd ..
+    cd tidied$c
+
+    find . -type f -empty -print -delete > /dev/null ## Remove all empty and therefore redundant files (empty windows) 
+    
+    for filename in ./*.txt; do
+            if [ "$( wc -l <"$filename" )" -eq 1 ]; then
+                rm -f "$filename"
+            fi
+    done
+
+    find -name '*.txt' -execdir bash -c \ 'mv -v "$0" "${0%.txt}_$(wc -l < "$0").txt"' {} \; > /dev/null
+    
+    rm clustersontig$c*
+    
+    for file in ./*;do 
+
+    while read LINE; do 
+        gene_names=$(awk '{print $1}' $file)
+        if  grep "$gene_names" ~/inspector_clusto/inspector_package/input_data/all_antismash.gbk; 
+        then
+            awk '{print "Y\t"$0}' $file > $file.inspector_output
+        else
+            awk '{print "N\t"$0}' $file > $file.inspector_output
+        fi
+
+    done<$file
+
+    done
+
+
+    for file in ./*.inspector_output
+    do
+        sort -o $file $file
+        echo " "
+        echo " "
+        echo " "
+        echo "###############################"$file"###############################"
+        awk 'NR==1{first = $11} END{print $11 - first,"bp",NR,"genes"}' $file
+        awk '{print $10,$2,"LFC",$3,"AveExpr",$4,"antismash?",$1}' $file 
+    
+    done
+    cd ..
+done
