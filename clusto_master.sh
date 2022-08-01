@@ -1,5 +1,7 @@
 ##!/bin/bash
-echo "beginning the run, good luck"
+echo "RUNNING CLUSTER-FINDER INSPECTOR_CLUSTO"
+
+echo "BUILDING SUBFOLDERS"
 
 mkdir above_4_below_negative_4
 
@@ -19,14 +21,13 @@ sed 's/\,/\t/g' penx_master_table_inplantavsinvitro.csv > penx_master_table_inpl
 
 ## Write an if loop that if the LFC (column 2) is above a specified value, then pull the ID (column 1) to a new txt file for grepping against gff3 file
 
+echo "CUTTING DOWN GFF3 TO JUST IMPORTANT PARTS + DIVIDING GFF3 UP INTO RESPECTIVE CONTIGS"
+
 while read LINE; do
 
 awk '{ minimumLFC=4 ;
-
 if ($2 >= 4 || $2 <= -4)
-
     print $1 > "selective_geneids.txt"
-
 }'
 
 done<inplantavsinvitro.txt
@@ -75,7 +76,9 @@ done
 cd passed_to_awk
 
 ## Then use this to run the window code and output to a new file
-echo "sliding the window"
+
+echo "SLIDING THE WINDOW FROM ATTACHED PYTHON-SCRIPT OVER MODIFIED GFF3"
+
 python3 ~/inspector_clusto/inspector_package/scripts/clusto_window_looping.py > ../mega_clusters.txt
 
 cd ..
@@ -100,7 +103,10 @@ find . -type f -exec bash -c 'mv "$0" "$0.txt"' {} \;
 
 #3
 ## This first loop is annotated to explain their purposes
-echo "window done, now for some processing of the window output"
+
+echo "WINDOW HAS BEEN RUN, SEPARATING + ANNOTATING WINDOW-OUTPUT, REMOVING EMPTY AND SINGLE-GENE WINDOW-FILES + TAKING INFORMATION FROM ANTISMASH GBK TO COMPARE
+    ANTISMASH TO INSPECTOR_CLUSTO"
+
 for c in {1..8}
 do
     mkdir $c
