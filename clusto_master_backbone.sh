@@ -23,7 +23,7 @@ sed 's/\,/\t/g' penx_master_table_inplantavsinvitro.csv > penx_master_table_inpl
 
 ## Then grep it down to only mRNA
 
-grep "mRNA" Penicillium_sp._X_above_four_below_negative_four.gff3.txt > Penicillium_sp._X_above_four_below_negative_fouronlymrna.gff3.txt
+grep "mRNA" Penicillium_sp._X.gff3 > Penicillium_sp._X_above_four_below_negative_fouronlymrna.gff3.txt
 
 ## This step will make sure that the files contain all of the functional annotation, before hand it would cut off between hypothetical and protein as there was a space!
 ## If the text is too unwieldy on the page, simply delete this line of code, it won't have an effect on the rest of the script
