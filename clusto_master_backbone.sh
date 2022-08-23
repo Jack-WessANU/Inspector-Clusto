@@ -21,21 +21,6 @@ sed 's/\,/\t/g' penx_master_table_inplantavsinvitro.csv > penx_master_table_inpl
 
 ## Write an if loop that if the LFC (column 2) is above a specified value, then pull the ID (column 1) to a new txt file for grepping against gff3 file
 
-echo "CUTTING DOWN GFF3 TO JUST IMPORTANT PARTS + DIVIDING GFF3 UP INTO RESPECTIVE CONTIGS"
-
-while read LINE; do
-
-awk '{ minimumLFC=4 ;
-if ($2 >= 4 || $2 <= -4)
-    print $1 > "selective_geneids.txt"
-}'
-
-done<inplantavsinvitro.txt
-
-## Use this new selective gene id file to modify a gff3 to only contain genes regulated above or below the specified spot
-
-grep -f selective_geneids.txt Penicillium_sp._X.gff3 > Penicillium_sp._X_above_four_below_negative_four.gff3.txt
-
 ## Then grep it down to only mRNA
 
 grep "mRNA" Penicillium_sp._X_above_four_below_negative_four.gff3.txt > Penicillium_sp._X_above_four_below_negative_fouronlymrna.gff3.txt
@@ -67,6 +52,13 @@ for FILE in passed_to_awk/*;
 do
 
     awk -i inplace '{print $9, $4, $5}' $FILE
+    sed -i 's/\;/\t/g' $FILE
+    awk -i inplace '{print $1, $NF-1, $NF1}' $FILE
+    sed -i 's/\=/\t/g' $FILE
+    sed -i 's/\ /\t/g' $FILE
+    awk -i inplace '{print $2, $(NF-1), $NF}' $FILE
 
 done
+
+
 
