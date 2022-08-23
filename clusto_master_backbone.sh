@@ -61,3 +61,12 @@ do
 
 done
 
+
+for FILE in passed_to_awk/*;
+
+do
+
+    awk -i inplace '{print $9, $4, $5}' $FILE
+
+done
+
