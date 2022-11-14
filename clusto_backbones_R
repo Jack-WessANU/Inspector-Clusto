@@ -1,4 +1,6 @@
-sink("500.txt")
+sink("500.txt") ## This code will print the entire standard output to a file called "GAP.txt"
+
+## Loading in modded versions of the gff3 files for each PenX contig into dataframes
 tig_1_modded.gff3 <- read.csv("Penicillium_sp._X_onlymrna_modded.gff3.tig1", sep = " ", header = FALSE)
 tig_2_modded.gff3 <- read.csv("Penicillium_sp._X_onlymrna_modded.gff3.tig2", sep = " ", header = FALSE)
 tig_3_modded.gff3 <- read.csv("Penicillium_sp._X_onlymrna_modded.gff3.tig3", sep = " ", header = FALSE)
@@ -7,6 +9,7 @@ tig_5_modded.gff3 <- read.csv("Penicillium_sp._X_onlymrna_modded.gff3.tig5", sep
 tig_6_modded.gff3 <- read.csv("Penicillium_sp._X_onlymrna_modded.gff3.tig6", sep = " ", header = FALSE)
 tig_7_modded.gff3 <- read.csv("Penicillium_sp._X_onlymrna_modded.gff3.tig7", sep = " ", header = FALSE)
 
+## Adding an extra column to each dataframe with the number of its column
 tig_1_modded.gff3["contig"] <- "1" 
 tig_2_modded.gff3["contig"] <- "2" 
 tig_3_modded.gff3["contig"] <- "3" 
@@ -15,6 +18,7 @@ tig_5_modded.gff3["contig"] <- "5"
 tig_6_modded.gff3["contig"] <- "6" 
 tig_7_modded.gff3["contig"] <- "7" 
 
+## Adding column names to dataframes
 colnames(tig_1_modded.gff3) <- c("gene_id","LFC","bp_start","bp_end","contig")
 colnames(tig_2_modded.gff3) <- c("gene_id","LFC","bp_start","bp_end","contig")
 colnames(tig_3_modded.gff3) <- c("gene_id","LFC","bp_start","bp_end","contig")
@@ -23,16 +27,19 @@ colnames(tig_5_modded.gff3) <- c("gene_id","LFC","bp_start","bp_end","contig")
 colnames(tig_6_modded.gff3) <- c("gene_id","LFC","bp_start","bp_end","contig")
 colnames(tig_7_modded.gff3) <- c("gene_id","LFC","bp_start","bp_end","contig")
 
+## Combining all 7 contig-dataframes into 1 super contig-dataframe
 penx_transcriptome_modded.gff3 <- rbind(tig_1_modded.gff3,tig_2_modded.gff3,tig_3_modded.gff3,tig_4_modded.gff3,tig_5_modded.gff3,tig_6_modded.gff3,tig_7_modded.gff3)
-clus_count <- 0
-list_of_gene_count_all_clusters <- list()
+
+clus_count <- 0 ## Create variable clus_count that will increase by one every time a new cluster is defined, basically counting the number of clusters in genome
+list_of_gene_count_all_clusters <- list() ## Create a list that will be appended to with the number of genes in each cluster
 for (i in 1:7){
-  master_mix <- penx_transcriptome_modded.gff3[penx_transcriptome_modded.gff3$contig==i,]
+  master_mix <- penx_transcriptome_modded.gff3[penx_transcriptome_modded.gff3$contig==i,] ## Will go through the mega-dataframe contig by contig based on column and complete as below
   for (row in 1:nrow(master_mix)){
-    gap <- 500
-    LFC_curr <- master_mix[row, "LFC"]
+    gap <- 500 ## Variable "gap" denotes the size of the search area between genes
+    LFC_curr <- master_mix[row, "LFC"] ## This variable is used to find backbone genes, any above or below the values below are considered backbones and used as centres of clusters
     if(LFC_curr >= 4 | LFC_curr <= -4) {
       genes_in_this_cluster <- list()
+      
       num_r <- 1
       num_f <- 1
       first_r <- row-1
@@ -211,7 +218,11 @@ for (i in 1:7){
 
         })
       })
-      print(paste("%", genes_in_this_cluster, clus_count, num_f+num_r-1, up_reg, down_reg,"%"), quote=FALSE)
+      ## Below prints out the information on the genes in the cluster: gene_ids, cluster_id, number of genes in cluster, number upregulated, number down regulated. "%" is used
+      ## later in bash to help separate out elements
+      print(paste("%", genes_in_this_cluster, clus_count, num_f+num_r-1, up_reg, down_reg,"%"), quote=FALSE) 
+      
+      ## Counter that keeps track of the total number of genes in the current cluster
       number_of_genes_in_this_cluster <- (num_f+num_r-1)
     }
   }
