@@ -35,7 +35,7 @@ list_of_gene_count_all_clusters <- list() ## Create a list that will be appended
 for (i in 1:7){
   master_mix <- penx_transcriptome_modded.gff3[penx_transcriptome_modded.gff3$contig==i,] ## Will go through the mega-dataframe contig by contig based on column and complete as below
   for (row in 1:nrow(master_mix)){
-    gap <- 500 ## Variable "gap" denotes the size of the search area between genes
+    gap <- 750 ## Variable "gap" denotes the size of the search area between genes
     LFC_curr <- master_mix[row, "LFC"] ## This variable is used to find backbone genes, any above or below the values below are considered backbones and used as centres of clusters
     if(LFC_curr >= 4 | LFC_curr <= -4) {
       genes_in_this_cluster <- list()
@@ -121,7 +121,7 @@ for (i in 1:7){
         LFC_curr_n <- master_mix[pos_c_f, "LFC"]
         gene_id_curr_p <- master_mix[pos_c_b, "gene_id"]
         gene_id_curr_n <- master_mix[pos_c_f, "gene_id"]
-
+        
         try(while ((bp_start_curr_p - bp_end_prev)<gap){
           print(paste(gene_id_prev, LFC_prev, bp_start_prev, bp_end_prev, "previous_gene #", num_r, (bp_start_curr_p - bp_end_prev)), quote=FALSE)
           genes_in_this_cluster <- append(genes_in_this_cluster, list(gene_id_prev))
@@ -215,7 +215,7 @@ for (i in 1:7){
           LFC_curr_n <- master_mix[pos_c_f, "LFC"]
           gene_id_curr_p <- master_mix[pos_c_b, "gene_id"]
           gene_id_curr_n <- master_mix[pos_c_f, "gene_id"]
-
+          
         })
       })
       ## Below prints out the information on the genes in the cluster: gene_ids, cluster_id, number of genes in cluster, number upregulated, number down regulated. "%" is used
@@ -224,6 +224,7 @@ for (i in 1:7){
       
       ## Counter that keeps track of the total number of genes in the current cluster
       number_of_genes_in_this_cluster <- (num_f+num_r-1)
+      list_of_gene_count_all_clusters <- append(list_of_gene_count_all_clusters, list(number_of_genes_in_this_cluster))
     }
   }
 }
