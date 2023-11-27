@@ -47,7 +47,7 @@ for i in {1..7};
 
 do
 
-    grep 'tig0000000'$i Penicillium_sp._X_onlymrna_modded.gff3 > passed_to_awk/Penicillium_sp._X_onlymrna_modded.gff3.tig$i
+    grep 'tig0000000'$i Penicillium_sp._X_onlymrna_modded.gff3 > clusto_before_R_output/Penicillium_sp._X_onlymrna_modded.gff3.tig$i
 
 done
 
