@@ -9,7 +9,7 @@ cp input_data/inplantavsinvitro.csv backbones
 
 cp input_data/Penicillium_sp._X.gff3 backbones
 
-cp input_data/penx_master_table_inplantavsinvitro.csv backbones
+cp input_data/penx_master_table_inplanta_vs_invitro.csv backbones
 
 cd backbones
 
@@ -17,14 +17,14 @@ cd backbones
 
 sed 's/\,/\t/g' inplantavsinvitro.csv > inplantavsinvitro.txt
 
-sed 's/\,/\t/g' penx_master_table_inplantavsinvitro.csv > penx_master_table_inplantavsinvitro.txt
+sed 's/\,/\t/g' penx_master_table_inplanta_vs_invitro.csv > penx_master_table_inplanta_vs_invitro.txt
 
 for i in {1..7};
 
 do
 
         mkdir $i
-        cp penx_master_table_inplantavsinvitro.txt $i/
+        cp penx_master_table_inplanta_vs_invitro.txt $i/
 
 done
 ## Then grep it down to only mRNA
@@ -66,13 +66,13 @@ done
 
 cd passed_to_awk
 
-awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../1/penx_master_table_inplantavsinvitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig1
-awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../2/penx_master_table_inplantavsinvitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig2
-awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../3/penx_master_table_inplantavsinvitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig3
-awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../4/penx_master_table_inplantavsinvitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig4
-awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../5/penx_master_table_inplantavsinvitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig5
-awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../6/penx_master_table_inplantavsinvitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig6
-awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../7/penx_master_table_inplantavsinvitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig7
+awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../1/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig1
+awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../2/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig2
+awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../3/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig3
+awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../4/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig4
+awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../5/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig5
+awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../6/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig6
+awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../7/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig7
 
 
     
