@@ -4,6 +4,8 @@ mkdir clusto_after_R
 
 cp input_data/penx_master_table_inplanta_vs_invitro.csv clusto_after_R
 
+cp input_data/500.txt clusto_after_R
+
 cd clusto_after_R
 
 sed 's/\,/\t/g' penx_master_table_inplanta_vs_invitro.csv > penx_master_table_inplanta_vs_invitro.txt
