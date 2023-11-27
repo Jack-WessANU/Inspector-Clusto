@@ -1,12 +1,12 @@
 ## Firstly, we have to change the master table from a comma separated file to space separated text file
 
-sed 's/\,/\t/g' penx_master_table_inplantavsinvitro.csv > penx_master_table_inplantavsinvitro.txt
+sed 's/\,/\t/g' penx_master_table_inplanta_vs_invitro.csv > penx_master_table_inplanta_vs_invitro.txt
 
-sed -i '1d' penx_master_table_inplantavsinvitro.txt
+sed -i '1d' penx_master_table_inplanta_vs_invitro.txt
 
 ## We then need to generate a list of gene ids from the master table and cast it against the antismash output to determine which were found by both antismash and clusto
 
-awk '{print $1}' penx_master_table_inplantavsinvitro.txt > gene_ids.txt
+awk '{print $1}' penx_master_table_inplanta_vs_invitro.txt > gene_ids.txt
 
 while read LINE; do
 
