@@ -3,15 +3,15 @@ echo "RUNNING CLUSTER-FINDER INSPECTOR_CLUSTO"
 
 echo "BUILDING SUBFOLDERS"
 
-mkdir before_R_output
+mkdir clusto_before_R
 
-cp input_data/inplantavsinvitro.csv before_R_output
+cp input_data/inplantavsinvitro.csv clusto_before_R
 
-cp input_data/Penicillium_sp._X.gff3 before_R_output
+cp input_data/Penicillium_sp._X.gff3 clusto_before_R
 
-cp input_data/penx_master_table_inplanta_vs_invitro.csv before_R_output
+cp input_data/penx_master_table_inplanta_vs_invitro.csv clusto_before_R
 
-cd backbones
+cd clusto_before_R
 
 ## Convert our csv file to a tab-delimited one
 
@@ -38,7 +38,7 @@ awk '{print $1, $2, $3, $4, $5, $6, $7, $8, $9$10$11$12$13$14$15$16$17$18$19$20 
 
 ## Then we need to separate them into contigs
 
-mkdir passed_to_awk_use_in_R
+mkdir clusto_before_R_output
 
 ## for loop to do the separating, BUG; works but cant get the $i in output file name to be in middle of the file name where I want it to be.
 echo "separating out tigs and cutting out the useless stuff"
@@ -51,7 +51,7 @@ do
 
 done
 
-for FILE in passed_to_awk_use_in_R/*;
+for FILE in clusto_before_R_output/*;
 
 do
 
@@ -64,7 +64,7 @@ do
 
 done
 
-cd passed_to_awk_use_in_R
+cd clusto_before_R_output
 
 awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../1/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig1
 awk -i inplace 'FNR==NR { a[$1]=$2; next } $1 in a { print $1, a[$1], $2, $3 }' ../2/penx_master_table_inplanta_vs_invitro.txt Penicillium_sp._X_onlymrna_modded.gff3.tig2
