@@ -1,5 +1,11 @@
 ## Firstly, we have to change the master table from a comma separated file to space separated text file
 
+mkdir clusto_after_R
+
+cp input_data/penx_master_table_inplanta_vs_invitro.csv clusto_after_R
+
+cd clusto_after_R
+
 sed 's/\,/\t/g' penx_master_table_inplanta_vs_invitro.csv > penx_master_table_inplanta_vs_invitro.txt
 
 sed -i '1d' penx_master_table_inplanta_vs_invitro.txt
@@ -10,7 +16,7 @@ awk '{print $1}' penx_master_table_inplanta_vs_invitro.txt > gene_ids.txt
 
 while read LINE; do
 
-    if  grep "$LINE" ~/inspector_clusto/inspector_package/input_data/all_antismash.gbk;
+    if  grep "$LINE" ../input_data/all_antismash.gbk;
     then
         echo $LINE "Y" >> gene_ids_antismash.txt
     else
