@@ -47,3 +47,5 @@ awk '{print $1, $2"-"$3"-"$4"-"$5}' clusto_summary3.txt > clusto_summary4.txt
 ## Code to combine the clusto and antismash
 
 awk 'NR==FNR {h[$1] = $2; next} {print $1, $2"-"h[$1]}' clusto_summary4.txt gene_ids_antismash.txt > gene_ids_clusto_antismash.txt
+
+sed 's/\t/\,/g' gene_ids_clusto_antismash.txt > gene_ids_clusto_antismash.csv
